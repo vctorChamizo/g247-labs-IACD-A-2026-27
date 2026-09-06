@@ -1,15 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejemplo de CSS básico</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+  <body>
+    <header class="site-header">
+      <strong>Aula Web</strong>
 
-<body>
-    <h1>Hello, World!</h1>
-</body>
+      <nav aria-label="Navegación principal">
+        <ul class="nav-list">
+          <li><a class="nav-link" href="#hero">Inicio</a></li>
+          <li><a class="nav-link" href="#cards">Tarjetas</a></li>
+          <li><a class="nav-link" href="#grid">Grid</a></li>
+        </ul>
+      </nav>
+    </header>
 
+    <main class="page-layout">
+      <section id="hero" class="panel hero">
+        <h1>HTML semántico y CSS básico</h1>
+        <p>
+          Una página pequeña para observar selectores, especificidad, modelo de caja, Flexbox, Grid
+          y diseño <em>responsive</em>.
+        </p>
+        <a href="https://developer.mozilla.org/es/docs/Web/CSS" target="_blank" rel="noreferrer">
+          Consultar CSS en MDN
+        </a>
+      </section>
 
+      <section aria-labelledby="concepts-title">
+        <h2 id="concepts-title">Conceptos principales</h2>
+
+        <div id="cards" class="cards">
+          <article class="card">
+            <span class="tag">Caja</span>
+            <h3>Modelo de caja</h3>
+            <p>El contenido está rodeado por padding, borde y margen.</p>
+          </article>
+
+          <article class="card card--featured">
+            <span class="tag">1 dimensión</span>
+            <h3>Flexbox</h3>
+            <p>Distribuye elementos en una fila o en una columna.</p>
+          </article>
+
+          <article class="card">
+            <span class="tag">2 dimensiones</span>
+            <h3>Grid</h3>
+            <p>Organiza regiones utilizando filas y columnas.</p>
+          </article>
+        </div>
+
+        <section id="grid" aria-labelledby="grid-title">
+          <h2 id="grid-title">Tamaños de columna</h2>
+          <div class="grid-demo" aria-label="Ejemplo visual de tres columnas">
+            <div>80px</div>
+            <div>1fr</div>
+            <div>2fr</div>
+          </div>
+        </section>
+      </section>
+
+      <aside class="panel" aria-labelledby="notes-title">
+        <h2 id="notes-title">Qué observar</h2>
+        <ul>
+          <li>El espacio interior y el borde de las cajas.</li>
+          <li>La alineación del menú y las tarjetas.</li>
+          <li>La proporción entre las columnas.</li>
+          <li>El cambio por debajo de 768px.</li>
+        </ul>
+
+        <p id="important-notice" class="notice">Un selector de ID gana a un selector de clase.</p>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <p>Ejemplo docente · Programación de Aplicaciones Web</p>
+    </footer>
+  </body>
 </html>

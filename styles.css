@@ -1,0 +1,171 @@
+/* 1. Selectors and base styles -------------------------------------- */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: #1f2937;
+  background: #f3f4f6;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+a {
+  color: #1d4ed8;
+}
+
+/* Class selector */
+.panel {
+  padding: 1.5rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+/* ID selector: more specific than .panel */
+#hero {
+  border-color: #2563eb;
+}
+
+/* Attribute selector */
+a[target="_blank"]::after {
+  content: " ↗";
+}
+
+/* Descendant and child selectors */
+.card p {
+  color: #4b5563;
+}
+
+.cards > .card {
+  min-width: 0;
+}
+
+/* Pseudo-classes */
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: #1e3a8a;
+  text-decoration: underline;
+}
+
+/* 2. Specificity ---------------------------------------------------- */
+
+.notice {
+  color: #6b7280;
+}
+
+/* This ID selector wins over the class selector above. */
+#important-notice {
+  color: #b91c1c;
+  font-weight: bold;
+}
+
+/* 3. Box model ------------------------------------------------------ */
+
+.card {
+  flex: 1;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: #ffffff;
+}
+
+.card--featured {
+  border-width: 3px;
+  border-color: #2563eb;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+  color: #1e3a8a;
+  background: #dbeafe;
+  font-size: 0.85rem;
+}
+
+/* 4. Flexbox: one dimension ---------------------------------------- */
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: #ffffff;
+}
+
+.nav-list {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cards {
+  display: flex;
+  gap: 1rem;
+}
+
+/* 5. Grid: two dimensions ------------------------------------------ */
+
+.page-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.hero {
+  grid-column: 1 / -1;
+}
+
+.grid-demo {
+  display: grid;
+  grid-template-columns: 80px 1fr 2fr;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  justify-items: stretch;
+  align-items: center;
+}
+
+.grid-demo > div {
+  padding: 1rem 0.5rem;
+  color: #ffffff;
+  background: #2563eb;
+  text-align: center;
+}
+
+.site-footer {
+  padding: 1rem;
+  border-top: 1px solid #d1d5db;
+  background: #ffffff;
+  text-align: center;
+}
+
+/* 6. Responsive design --------------------------------------------- */
+
+@media (max-width: 768px) {
+  .site-header,
+  .nav-list,
+  .cards {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-layout,
+  .grid-demo {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    grid-column: auto;
+  }
+}
