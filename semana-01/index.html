@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejemplo de HTML semántico</title>
+  </head>
+
+  <body>
+    <header>
+      <strong>Aula Web</strong>
+
+      <nav aria-label="Navegación principal">
+        <ul>
+          <li><a href="#introduccion">Inicio</a></li>
+          <li><a href="#conceptos">Conceptos</a></li>
+          <li><a href="#observaciones">Observaciones</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="introduccion">
+        <h1>HTML semántico</h1>
+        <p>
+          Esta página utiliza elementos HTML para expresar la estructura y el significado del
+          contenido antes de aplicar ningún estilo visual.
+        </p>
+        <a href="https://developer.mozilla.org/es/docs/Web/HTML" target="_blank" rel="noreferrer">
+          Consultar HTML en MDN
+        </a>
+      </section>
+
+      <section id="conceptos">
+        <h2>Conceptos principales</h2>
+
+        <article>
+          <h3>Encabezados y párrafos</h3>
+          <p>Los encabezados organizan la información y los párrafos desarrollan cada idea.</p>
+        </article>
+
+        <article>
+          <h3>Listas</h3>
+          <p>Las listas agrupan elementos relacionados cuando el orden no forma parte del significado.</p>
+        </article>
+
+        <article>
+          <h3>Enlaces</h3>
+          <p>Los enlaces permiten navegar hacia otros recursos o a secciones del mismo documento.</p>
+        </article>
+
+        <section>
+          <h2>Contenido estructurado</h2>
+          <ol>
+            <li>El navegador recibe un documento HTML.</li>
+            <li>Los elementos describen la función de cada bloque.</li>
+            <li>CSS podrá modificar después su presentación visual.</li>
+          </ol>
+        </section>
+      </section>
+
+      <aside id="observaciones">
+        <h2>Qué observar</h2>
+        <ul>
+          <li>La diferencia entre <code>header</code>, <code>main</code>, <code>section</code>, <code>article</code>, <code>aside</code> y <code>footer</code>.</li>
+          <li>La jerarquía de encabezados desde <code>h1</code> hasta <code>h3</code>.</li>
+          <li>La ausencia de atributos <code>class</code> y de hojas de estilo.</li>
+        </ul>
+      </aside>
+    </main>
+
+    <footer>
+      <p>Ejemplo docente · Programación de Aplicaciones Web</p>
+    </footer>
+  </body>
+</html>
