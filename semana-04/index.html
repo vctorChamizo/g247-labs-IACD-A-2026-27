@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejemplo de DOM y eventos</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <strong>Aula Web</strong>
+
+      <nav aria-label="Navegación principal">
+        <ul class="nav-list">
+          <li><a class="nav-link" href="#person">Objeto</a></li>
+          <li><a class="nav-link" href="#control">Condiciones</a></li>
+          <li><a class="nav-link" href="#functions">Funciones</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="page-layout">
+      <section class="panel hero" aria-labelledby="page-title">
+        <h1 id="page-title">Del JavaScript al DOM</h1>
+        <p>
+          El código de la semana 3 trabaja con datos y funciones en la consola. Esta página usa esa
+          misma lógica para actualizar elementos HTML cuando ocurre un evento.
+        </p>
+      </section>
+
+      <section class="content">
+        <section id="person" aria-labelledby="person-title">
+          <h2 id="person-title">1. Mostrar los datos de un objeto</h2>
+          <article class="panel exercise">
+            <h3>Ficha de estudiante</h3>
+            <p>
+              El objeto <code>person</code> contiene strings, números, booleanos, arrays y un objeto
+              anidado, igual que en el ejemplo de JavaScript de la semana 3.
+            </p>
+            <button id="person-button" type="button">Mostrar ficha</button>
+            <p id="person-result" class="result" aria-live="polite"></p>
+          </article>
+        </section>
+
+        <section id="control" aria-labelledby="control-title">
+          <h2 id="control-title">2. Mostrar el resultado de una condición</h2>
+          <article class="panel exercise">
+            <h3>Clasificar un número</h3>
+            <p>Se reutiliza una función que distingue números impares, pares y múltiplos de 4.</p>
+            <label for="number-input">Número entero</label>
+            <div class="input-row">
+              <input id="number-input" type="number" value="8" />
+              <button id="classify-button" type="button">Clasificar</button>
+            </div>
+            <p id="classification-result" class="result" aria-live="polite"></p>
+          </article>
+        </section>
+
+        <section id="functions" aria-labelledby="functions-title">
+          <h2 id="functions-title">3. Mostrar el resultado de una función con <code>while</code></h2>
+          <article class="panel exercise">
+            <h3>Primera nota aprobada</h3>
+            <p>
+              El bucle revisa las notas hasta encontrar un aprobado o hasta que no quedan más datos.
+            </p>
+            <button id="grade-button" type="button">Buscar aprobado</button>
+            <p id="grade-result" class="result" aria-live="polite"></p>
+          </article>
+        </section>
+      </section>
+
+      <aside class="panel notes" aria-labelledby="notes-title">
+        <h2 id="notes-title">Qué observar</h2>
+        <ol>
+          <li><code>querySelector</code> selecciona elementos HTML con selectores CSS.</li>
+          <li><code>addEventListener</code> registra la función que responde a cada <code>click</code>.</li>
+          <li><code>textContent</code> actualiza el texto de un elemento sin crear HTML nuevo.</li>
+          <li>La lógica de variables, condiciones, <code>while</code> y funciones no cambia.</li>
+        </ol>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <p>Ejemplo docente · Programación de Aplicaciones Web</p>
+    </footer>
+  </body>
+</html>
