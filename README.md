@@ -6,5 +6,6 @@ Ejemplos progresivos empleados en las clases de Programación de Aplicaciones We
 |---|---|---|
 | 1 | HTML semántico sin estilos | [`semana-01/`](semana-01/) |
 | 2 | El mismo documento con CSS básico | [`semana-02/`](semana-02/) |
+| 3 | JavaScript: variables, tipos, control de flujo y funciones | [`semana-03/`](semana-03/) |
 
-La progresión mantiene la misma estructura de contenido para que se pueda observar con claridad qué aporta CSS sobre un documento HTML ya semántico.
+La semana 3 separa la lógica de JavaScript de la interfaz: sus resultados se observan en la consola del navegador, sin usar todavía el DOM.
