@@ -1,71 +1,83 @@
-// Datos y funciones procedentes de la semana 3 ----------------------
+// =====================================================================
+// PARTE 1 — ARRAYS Y CONTROL DE FLUJO
+// Los resultados de este bloque se consultan en la consola del navegador.
+// =====================================================================
 
-const person = {
-  name: "Lucía Martín",
-  age: 20,
-  isEnrolled: true,
-  contactEmail: null,
-  subjects: ["Programación de Aplicaciones Web", "Bases de datos"],
-  address: {
-    city: "Madrid",
-    campus: "Pirineos",
-  },
-};
+// Cada elemento del array es un objeto con varios tipos de datos.
 
-const attemptedGrades = [3, 4, 6, 8];
+const workshops = [
+  { id: 101, title: "HTML semántico", isOpen: false, availableSeats: 0 },
+  { id: 102, title: "CSS responsive", isOpen: true, availableSeats: 2 },
+  { id: 103, title: "JavaScript y DOM", isOpen: true, availableSeats: 8 },
+];
 
-function classifyNumber(number) {
-  if (number % 2 === 0 && number % 4 === 0) {
-    return `${number} es par y múltiplo de 4.`;
+function getRegistrationMessage(workshop) {
+  // `find` puede no encontrar un resultado. En ese caso devuelve undefined.
+  if (workshop === undefined) {
+    return "No existe un taller con ese identificador.";
   }
 
-  if (number % 2 === 0) {
-    return `${number} es par, pero no múltiplo de 4.`;
+  // `!` niega un boolean y `||` permite contemplar dos motivos de cierre.
+  if (!workshop.isOpen || workshop.availableSeats === 0) {
+    return `${workshop.title}: inscripciones cerradas.`;
   }
 
-  return `${number} es impar.`;
-}
-
-function findFirstPassingGrade(grades) {
-  let index = 0;
-  let firstPassingGrade = null;
-
-  while (index < grades.length && firstPassingGrade === null) {
-    if (grades[index] >= 5) {
-      firstPassingGrade = grades[index];
-    }
-
-    index += 1;
+  // `&&` exige que las dos condiciones se cumplan al mismo tiempo.
+  if (workshop.isOpen && workshop.availableSeats <= 2) {
+    return `${workshop.title}: últimas ${workshop.availableSeats} plazas.`;
   }
 
-  return firstPassingGrade;
+  return `${workshop.title}: ${workshop.availableSeats} plazas disponibles.`;
 }
 
-// DOM y eventos ------------------------------------------------------
+console.group("Parte 1 · Arrays y control de flujo");
+console.table(workshops);
 
-const personButton = document.querySelector("#person-button");
-const personResult = document.querySelector("#person-result");
-const numberInput = document.querySelector("#number-input");
-const classifyButton = document.querySelector("#classify-button");
-const classificationResult = document.querySelector("#classification-result");
-const gradeButton = document.querySelector("#grade-button");
-const gradeResult = document.querySelector("#grade-result");
+// `some` responde una pregunta con un boolean: true si al menos un elemento cumple la condición.
 
-function showPerson() {
-  const enrollmentStatus = person.isEnrolled ? "matriculada" : "sin matrícula";
-  personResult.textContent = `${person.name}, ${person.age} años · ${enrollmentStatus} · ${person.subjects[0]} · Campus ${person.address.campus}.`;
-}
+const hasFullWorkshop = workshops.some((workshop) => workshop.availableSeats === 0);
+console.log("¿Hay algún taller completo?", hasFullWorkshop);
 
-function showClassification() {
-  const number = Number(numberInput.value);
-  classificationResult.textContent = classifyNumber(number);
-}
+// `find` devuelve el primer objeto que coincide con la condición.
+const selectedWorkshop = workshops.find((workshop) => workshop.id === 102);
+console.log("Taller con id 102:", selectedWorkshop);
 
-function showFirstPassingGrade() {
-  const firstPassingGrade = findFirstPassingGrade(attemptedGrades);
-  gradeResult.textContent = `Notas: ${attemptedGrades.join(", ")}. Primera nota aprobada: ${firstPassingGrade}.`;
-}
+// `findIndex` devuelve la posición del elemento. Si no lo encontrase, devolvería -1.
+const selectedWorkshopIndex = workshops.findIndex((workshop) => workshop.id === 102);
+console.log("Posición del taller 102:", selectedWorkshopIndex);
 
-personButton.addEventListener("click", showPerson);
-classifyButton.addEventListener("click", showClassification);
-gradeButton.addEventListener("click", showFirstPassingGrade);
+// `filter` genera un array nuevo con los elementos que cumplen la condición.
+const openWorkshops = workshops.filter((workshop) => !workshop.isOpen);
+console.log("Talleres abiertos:", openWorkshops);
+
+// `forEach` ejecuta una acción por cada elemento; no crea ni devuelve un array nuevo.
+workshops.forEach((workshop) => {
+  const result = getRegistrationMessage(workshop);
+  console.log(result);
+});
+
+// `map` transforma todos los elementos y devuelve un array nuevo con el resultado.
+const workshopTitles = workshops.map((workshop) => workshop.title);
+console.log("Títulos de talleres abiertos:", workshopTitles);
+console.groupEnd();
+
+// =====================================================================
+// PARTE 2 — DOM
+// Este bloque hace visible en la página el resultado de eventos y cambios.
+// =====================================================================
+
+// `querySelectorAll` devuelve una NodeList con los tres botones de mensaje.
+const messageButtons = document.querySelectorAll(".message-button");
+const messageOutput = document.querySelector("#message-output");
+
+messageButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    // El atributo data-message se consulta desde dataset y actualiza un nodo ya existente.
+    messageOutput.textContent = button.dataset.message;
+
+    // Recorrer los botones permite que solo el que se ha pulsado conserve el estado activo.
+    messageButtons.forEach((currentButton) => {
+      currentButton.classList.toggle("is-active", currentButton === button);
+    });
+  });
+});

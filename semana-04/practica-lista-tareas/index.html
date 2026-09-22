@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Práctica · Lista de tareas</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+
+  <body>
+    <main class="app">
+      <header>
+        <p class="eyebrow">Programación de Aplicaciones Web</p>
+        <h1>Lista de tareas</h1>
+        <p>Añadir, completar y eliminar tareas mediante JavaScript y el DOM.</p>
+      </header>
+
+      <form id="task-form">
+        <label for="task-input">Nueva tarea</label>
+        <div class="input-row">
+          <input id="task-input" type="text" placeholder="Ej.: Repasar querySelector" />
+          <button type="submit">Añadir</button>
+        </div>
+      </form>
+
+      <ul id="task-list" class="task-list" aria-label="Lista de tareas"></ul>
+    </main>
+  </body>
+</html>

@@ -7,7 +7,6 @@ body {
   color: #1f2937;
   background: #f3f4f6;
   font-family: Arial, sans-serif;
-  font-size: 16px;
   line-height: 1.5;
 }
 
@@ -26,7 +25,8 @@ button {
 }
 
 button:hover,
-button:focus-visible {
+button:focus-visible,
+.is-active {
   background: #1e40af;
 }
 
@@ -45,81 +45,92 @@ code {
   background: #ffffff;
 }
 
-.nav-list {
-  display: flex;
-  gap: 1rem;
+.site-header p {
   margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.nav-link {
-  color: #1d4ed8;
 }
 
 .page-layout {
   display: grid;
-  grid-template-columns: 2fr 1fr;
   gap: 1.5rem;
-  max-width: 1000px;
+  max-width: 960px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
-.hero {
-  grid-column: 1 / -1;
-}
-
-.panel,
-.card {
+.hero,
+.panel {
   padding: 1.5rem;
   border: 1px solid #d1d5db;
   border-radius: 0.75rem;
   background: #ffffff;
 }
 
-.content {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.card h3,
-.exercise h3 {
-  margin-top: 0;
-}
-
-.exercise {
+.hero {
   border-color: #93c5fd;
 }
 
-.input-row {
+.hero h1,
+.panel h2,
+.demo-block h3 {
+  margin-top: 0;
+}
+
+.eyebrow,
+.section-label {
+  margin: 0 0 0.25rem;
+  color: #1d4ed8;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.method-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.method-list div,
+.demo-block {
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+}
+
+.method-list dt {
+  font-weight: bold;
+}
+
+.method-list dd {
+  margin: 0.25rem 0 0;
+}
+
+.note {
+  margin-bottom: 0;
+  padding: 0.75rem;
+  border-left: 4px solid #2563eb;
+  background: #eff6ff;
+}
+
+.panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.message-buttons {
   display: flex;
   gap: 0.75rem;
-  margin-top: 0.5rem;
 }
 
-input {
-  width: 5rem;
-  padding: 0.5rem;
-  border: 1px solid #9ca3af;
-  border-radius: 0.4rem;
+.message-buttons {
+  flex-wrap: wrap;
 }
 
-.result {
+.output {
   min-height: 1.5rem;
   margin-bottom: 0;
   color: #1e3a8a;
   font-weight: bold;
-}
-
-.notes {
-  align-self: start;
 }
 
 .site-footer {
@@ -129,16 +140,13 @@ input {
   text-align: center;
 }
 
-@media (max-width: 768px) {
-  .site-header,
-  .nav-list,
-  .input-row {
+@media (max-width: 640px) {
+  .site-header {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .page-layout,
-  .cards {
+  .method-list {
     grid-template-columns: 1fr;
   }
 }
