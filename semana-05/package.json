@@ -1,0 +1,19 @@
+{
+  "name": "aula-web-tasks-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Week 5 classroom example: a first Express tasks API.",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1"
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "info": {
+    "_postman_id": "0c7f973f-3744-4d6d-b2c9-14377e2354a8",
+    "name": "Aula Web - Tasks API",
+    "description": "Colección de demostración para la API Express de la semana 5. Seleccionar el entorno Aula Web - Local antes de enviar las peticiones.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Comprobar que la API está activa",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "GET /health responde con { status: 'ok' }. Es la primera petición que conviene ejecutar tras arrancar el servidor."
+      },
+      "response": []
+    },
+    {
+      "name": "Parámetro de ruta - echo",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/echo/hello",
+          "host": ["{{baseUrl}}"],
+          "path": ["echo", "hello"]
+        },
+        "description": "GET /echo/:message muestra que la parte variable de la ruta se consulta desde req.params.message."
+      },
+      "response": []
+    },
+    {
+      "name": "Todas las tareas",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/tasks",
+          "host": ["{{baseUrl}}"],
+          "path": ["tasks"]
+        },
+        "description": "GET /tasks devuelve el array provisional completo."
+      },
+      "response": []
+    },
+    {
+      "name": "Parámetro de consulta - tareas pendientes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/tasks?done=false",
+          "host": ["{{baseUrl}}"],
+          "path": ["tasks"],
+          "query": [
+            {
+              "key": "done",
+              "value": "false",
+              "description": "El parámetro de consulta llega como string en req.query.done.",
+              "disabled": false
+            }
+          ]
+        },
+        "description": "GET /tasks?done=false aplica filter y devuelve solo las tareas pendientes."
+      },
+      "response": []
+    },
+    {
+      "name": "Enviar JSON - crear una tarea",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Review the Express example\",\n  \"done\": false,\n  \"userId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/tasks",
+          "host": ["{{baseUrl}}"],
+          "path": ["tasks"]
+        },
+        "description": "POST /tasks demuestra que express.json() convierte el cuerpo en req.body. Esta primera versión devuelve el cuerpo con estado 201; todavía no modifica el array."
+      },
+      "response": []
+    }
+  ]
+}
