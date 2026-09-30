@@ -1,14 +1,14 @@
-# Agente tester — ejemplo con Claude en VS Code
+# Agente tester con Claude Code
 
-Ejemplo mínimo de un agente de IA con una *skill* propia, construido sobre la API de tareas de esta misma semana. Acompaña a la presentación «El agente de IA» de la sesión 13 y anticipa el agente tester de la Práctica 1.
+Ejemplo mínimo de un agente de IA con una *skill* propia, construido sobre una API de tareas con Express. El agente analiza las rutas disponibles, crea pruebas automáticas y comunica los resultados sin modificar el código de la API.
 
 El ejemplo no requiere programar el agente: se define con tres ficheros Markdown dentro de la carpeta `.claude/`, que Claude lee al abrir el proyecto.
 
 ## Requisitos
 
-- La extensión de Claude para VS Code, con la sesión iniciada con la licencia de la universidad.
+- Claude Code en VS Code o en la terminal, con una sesión iniciada en una cuenta con acceso a Claude.
 - Node.js 18 o superior y las dependencias instaladas con `npm install`.
-- **Abrir la carpeta `semana-05/` en VS Code**, no la carpeta superior del repositorio. Claude busca `.claude/` en la carpeta abierta.
+- Abrir la carpeta raíz de este ejemplo en VS Code. Claude carga la configuración desde la carpeta `.claude/` del proyecto abierto.
 
 ## Qué contiene
 
@@ -32,7 +32,7 @@ semana-05/
 
 La *skill* `api-test-conventions` es lo que el agente consulta para decidir **cómo** escribir cada test: herramienta de testing, ubicación de los ficheros, formato del nombre y qué se comprueba primero. Sin ella, cada ejecución podría producir tests con un estilo distinto.
 
-## Demostración
+## Usar el agente
 
 1. Ejecutar `npm test`. No hay tests todavía: el resultado es `tests 0`.
 2. Escribir el *prompt* de la tabla y observar que Claude contesta sin tocar ningún fichero.
@@ -45,13 +45,13 @@ La *skill* `api-test-conventions` es lo que el agente consulta para decidir **c�
    Durante la ejecución, Claude muestra cada paso: qué fichero lee, qué fichero crea y qué comando ejecuta.
 4. Revisar la carpeta `tests/` que ha creado el agente y comprobar que sigue las reglas de la *skill*.
 5. Ejecutar `/run-tests` para obtener el mismo resumen sin repetir las instrucciones.
-6. **Modificar la *skill* y repetir.** Añadir esta línea al final de la sección «Writing each test» de `SKILL.md`:
+6. **Modificar la *skill* y repetir.** Añadir temporalmente esta línea al final de la sección «Writing each test» de `SKILL.md`:
 
    ```text
    - For every POST route, also write one test that sends a body without a title and expects status 400.
    ```
 
-   Pedir de nuevo el mismo objetivo al agente. Ahora aparece un test que falla: la API responde `201` incluso sin título, porque todavía no valida el cuerpo de la petición. El agente informa del problema y **no modifica `src/`**: su papel es detectar, no corregir. La validación se incorpora en semanas posteriores.
+   Pedir de nuevo el mismo objetivo al agente. Aparece un test que falla: la API responde `201` incluso sin título, porque todavía no valida el cuerpo de la petición. El agente informa del problema y **no modifica `src/`**: su papel es detectar, no corregir. Restaurar la regla temporal si no se quiere mantener como parte de la especificación.
 
 ## Qué se puede modificar
 
@@ -66,6 +66,6 @@ La *skill* `api-test-conventions` es lo que el agente consulta para decidir **c�
 
 Configurar este agente ha llevado tres ficheros. Compensa porque probar la API es una tarea que se repite cada vez que se añade una ruta. Para una pregunta puntual sobre el código, un *prompt* directo es más simple.
 
-## Relación con la Práctica 1
+## Qué muestra este ejemplo
 
-La Práctica 1 incluye un agente tester, evaluado por la calidad del *prompt*, el diseño de la *skill* y cómo se revisa e integra su salida. Este ejemplo muestra las tres piezas en su forma más sencilla: el *prompt* del agente (`api-tester.md`), la *skill* (`SKILL.md`) y la revisión de lo que produce (pasos 4 y 6).
+Este ejemplo reúne las tres piezas básicas de un flujo asistido por IA: el *prompt* del agente (`api-tester.md`), la *skill* (`SKILL.md`) y la revisión de los cambios que produce. La revisión sigue siendo necesaria: un agente puede detectar un comportamiento inesperado, pero no debe decidir por sí solo cómo cambiar la API.

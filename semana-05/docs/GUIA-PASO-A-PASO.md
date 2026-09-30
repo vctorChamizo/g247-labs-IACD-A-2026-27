@@ -17,7 +17,7 @@ npm install express dotenv
 
 1. `mkdir tasks-api` crea la carpeta del proyecto.
 2. `cd tasks-api` sitúa la terminal dentro de esa carpeta.
-3. `node --version` y `npm --version` verifican que Node.js y npm están disponibles. El curso requiere Node 18 o superior.
+3. `node --version` y `npm --version` verifican que Node.js y npm están disponibles. Este ejemplo requiere Node 18 o superior.
 4. `npm init -y` crea un `package.json` con valores iniciales. La opción `-y` acepta las respuestas por defecto.
 5. `npm install express dotenv` descarga Express y dotenv, los añade a `dependencies` y genera `package-lock.json`.
 
