@@ -1,0 +1,80 @@
+{
+  "info": {
+    "_postman_id": "7b8df4c8-68a0-4d4a-85f4-34c05c715c18",
+    "name": "Aula Web - Tasks REST API",
+    "description": "Colección para demostrar controladores, CRUD REST y manejo centralizado de errores.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Health check",
+      "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/health" },
+      "response": []
+    },
+    {
+      "name": "02 - List all tasks",
+      "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/tasks" },
+      "response": []
+    },
+    {
+      "name": "03 - Get one task",
+      "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/tasks/1" },
+      "response": []
+    },
+    {
+      "name": "04 - Create a task (201 + Location)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"title\": \"Review REST status codes\",\n  \"done\": false,\n  \"userId\": 2\n}", "options": { "raw": { "language": "json" } } },
+        "url": "{{baseUrl}}/tasks"
+      },
+      "response": []
+    },
+    {
+      "name": "05 - Replace task 2 with PUT",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"title\": \"Replace every editable property\",\n  \"done\": true,\n  \"userId\": 1\n}", "options": { "raw": { "language": "json" } } },
+        "url": "{{baseUrl}}/tasks/2"
+      },
+      "response": []
+    },
+    {
+      "name": "06 - Update task 3 with PATCH",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"done\": true\n}", "options": { "raw": { "language": "json" } } },
+        "url": "{{baseUrl}}/tasks/3"
+      },
+      "response": []
+    },
+    {
+      "name": "07 - Delete task 1 (204)",
+      "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/tasks/1" },
+      "response": []
+    },
+    {
+      "name": "08 - Validation error (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"done\": false,\n  \"userId\": 1\n}", "options": { "raw": { "language": "json" } } },
+        "url": "{{baseUrl}}/tasks"
+      },
+      "response": []
+    },
+    {
+      "name": "09 - Missing resource (404)",
+      "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/tasks/999" },
+      "response": []
+    },
+    {
+      "name": "10 - Unknown route (404)",
+      "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/unknown" },
+      "response": []
+    }
+  ]
+}

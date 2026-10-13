@@ -9,5 +9,6 @@ Ejemplos progresivos empleados en las clases de Programación de Aplicaciones We
 | 3 | JavaScript: variables, tipos, control de flujo y funciones | [`semana-03/`](semana-03/) |
 | 4 | Repaso de arrays/control de flujo y ejemplos básicos de DOM | [`semana-04/`](semana-04/) |
 | 5 | Node.js, Express, rutas y middleware | [`semana-05/`](semana-05/) |
+| 6 | Controladores, manejo de errores y API REST CRUD | [`semana-06/`](semana-06/) |
 
 La progresión pasa del JavaScript ejecutado en el navegador a una API de tareas en Node.js y Express. Los recursos `tasks` y `users` se mantienen como hilo conductor del bloque II.
