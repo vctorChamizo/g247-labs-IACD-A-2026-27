@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Books — Practice 1 starter</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>Books</h1>
+      <p>Ejemplo inicial: el dominio, los textos y el diseño deben sustituirse.</p>
+    </header>
+
+    <main>
+      <section aria-labelledby="create-title">
+        <h2 id="create-title">Create book</h2>
+        <form id="book-form">
+          <label>Title <input name="title" required /></label>
+          <label>Pages <input name="pages" type="number" min="1" required /></label>
+          <label>Available <input name="available" type="checkbox" /></label>
+          <label>
+            Genre
+            <select name="genre" required>
+              <option value="">Choose one</option>
+              <option value="novel">Novel</option>
+              <option value="essay">Essay</option>
+              <option value="poetry">Poetry</option>
+            </select>
+          </label>
+          <button type="submit">Create</button>
+        </form>
+        <p id="form-errors" class="message" aria-live="polite"></p>
+      </section>
+
+      <section aria-labelledby="list-title">
+        <div class="section-heading">
+          <h2 id="list-title">Books</h2>
+          <button id="reload-button" type="button">Reload</button>
+        </div>
+        <p id="status" class="message" aria-live="polite">Loading…</p>
+        <ul id="book-list"></ul>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

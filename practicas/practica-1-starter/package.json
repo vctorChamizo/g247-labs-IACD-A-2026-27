@@ -1,0 +1,17 @@
+{
+  "name": "practice-1-starter-books",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scaffolding incompleto para la Práctica 1 de G247.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node --watch src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
