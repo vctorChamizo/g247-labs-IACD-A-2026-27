@@ -3,43 +3,33 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Books — Practice 1 starter</title>
+    <title>Práctica 1 — Esqueleto de estructura</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <header class="site-header">
-      <h1>Books</h1>
-      <p>Ejemplo inicial: el dominio, los textos y el diseño deben sustituirse.</p>
+      <h1>Práctica 1 — Esqueleto de estructura</h1>
+      <p>Esta página confirma que Express sirve la interfaz desde la carpeta <code>public/</code>.</p>
     </header>
 
     <main>
-      <section aria-labelledby="create-title">
-        <h2 id="create-title">Create book</h2>
-        <form id="book-form">
-          <label>Title <input name="title" required /></label>
-          <label>Pages <input name="pages" type="number" min="1" required /></label>
-          <label>Available <input name="available" type="checkbox" /></label>
-          <label>
-            Genre
-            <select name="genre" required>
-              <option value="">Choose one</option>
-              <option value="novel">Novel</option>
-              <option value="essay">Essay</option>
-              <option value="poetry">Poetry</option>
-            </select>
-          </label>
-          <button type="submit">Create</button>
-        </form>
-        <p id="form-errors" class="message" aria-live="polite"></p>
+      <section aria-labelledby="connection-title">
+        <div class="section-heading">
+          <h2 id="connection-title">Comprobación de conexión</h2>
+          <button id="check-connection" type="button">Comprobar servidor</button>
+        </div>
+        <p id="status" class="message" aria-live="polite">Conexión sin comprobar.</p>
+        <p>La única petición implementada es <code>GET /health</code>. Permite comprobar que el navegador puede llamar al servidor Express.</p>
       </section>
 
-      <section aria-labelledby="list-title">
-        <div class="section-heading">
-          <h2 id="list-title">Books</h2>
-          <button id="reload-button" type="button">Reload</button>
-        </div>
-        <p id="status" class="message" aria-live="polite">Loading…</p>
-        <ul id="book-list"></ul>
+      <section aria-labelledby="next-title">
+        <h2 id="next-title">Pasos siguientes</h2>
+        <ol>
+          <li>Elegir y documentar un único recurso de dominio.</li>
+          <li>Renombrar <code>resources</code> de forma coherente en <code>src/</code>.</li>
+          <li>Definir los campos y las reglas de validación antes de implementar un <em>endpoint</em>.</li>
+          <li>Construir y comprobar un <em>endpoint</em> cada vez, antes de conectarlo desde este cliente.</li>
+        </ol>
       </section>
     </main>
 

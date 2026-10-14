@@ -1,18 +1,7 @@
-let books = [];
-let nextId = 1;
+// Este módulo es la única capa que debe conocer el array en memoria.
+// TODO: definir aquí el almacenamiento del recurso elegido y exportar funciones
+// con nombres claros, por ejemplo list, findById, create, replace, update y remove.
+// No se incluye un array ni una implementación para no resolver el dominio.
 
-function list() {
-  return books;
-}
-
-function create({ title, pages, available, genre }) {
-  const book = { id: nextId++, title, pages, available, genre };
-  books.push(book);
-  return book;
-}
-
-// TODO: añadir findById, replace, update y remove.
-// Cada función debe ser el único lugar que modifica el array.
-
-module.exports = { list, create };
+module.exports = {};
 

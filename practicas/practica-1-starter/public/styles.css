@@ -16,10 +16,9 @@ body { margin: 0; }
 .site-header > * { max-width: 49rem; margin-left: auto; margin-right: auto; }
 
 main { display: grid; gap: 2rem; }
-form { display: grid; gap: 0.75rem; max-width: 24rem; }
-label { display: grid; gap: 0.25rem; }
-input, select, button { font: inherit; padding: 0.5rem; }
-button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #e39b19; outline-offset: 2px; }
+section { background: white; border-radius: 0.5rem; padding: 1rem; }
+button { font: inherit; padding: 0.5rem; }
+button:focus-visible { outline: 3px solid #e39b19; outline-offset: 2px; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .message { min-height: 1.5em; }
 .error { color: #9d1c1c; }

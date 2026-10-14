@@ -1,8 +1,8 @@
-# Arranque de la Práctica 1
+# Esqueleto de la Práctica 1
 
-Este repositorio es un *scaffolding*: proporciona una estructura inicial y una primera conexión entre navegador y servidor. No es una solución de la Práctica 1 ni se puede entregar sin transformarlo sustancialmente.
+Este repositorio contiene únicamente la estructura técnica de una aplicación cliente-servidor. No proporciona un recurso de dominio, campos, datos iniciales, validación, consultas ni una solución de la práctica.
 
-El ejemplo usa el recurso `books` únicamente para hacer visible la estructura. Antes de comenzar, se sustituirán el nombre, los campos, las reglas y los textos por los del dominio elegido. No se admitirá la entrega de una copia de este ejemplo.
+Su objetivo es mostrar cómo se conectan una página web y una API de Express. Cada proyecto debe decidir su propio recurso y desarrollar el resto a partir de esta estructura.
 
 ## Puesta en marcha
 
@@ -13,143 +13,101 @@ npm install
 npm start
 ```
 
-La aplicación queda disponible en [http://localhost:3000](http://localhost:3000). La ruta `GET /health` permite comprobar que el servidor está activo.
+Abrir [http://localhost:3000](http://localhost:3000). El botón de la página realiza `GET /health`: si responde correctamente, el navegador está conectado al servidor Express.
 
-## Cómo se unen el cliente y la API
+## Qué se incluye y qué no
 
-La aplicación se levanta con **un único proceso de Node.js** y un único origen: `http://localhost:3000`. Express tiene dos responsabilidades distintas:
+| Incluido | No incluido |
+|---|---|
+| Servidor Express, lectura de JSON, registro de peticiones y manejo base de errores | Recurso de dominio y sus campos |
+| Carpeta `public/` servida desde Express | Datos iniciales y almacenamiento implementado |
+| Estructura de rutas, controlador, validación y almacenamiento | CRUD, `PATCH`, filtros, búsqueda, agregado o paginación |
+| Ejemplo neutro de `fetch("/health")` | Formularios, edición, eliminación o una interfaz de la práctica |
+| Plantillas de documentación del *tester agent* | Prompt, comprobaciones o resultados del agente |
+
+Los manejadores de `src/controllers/resourceController.js` responden temporalmente `501`. Esa respuesta no es una solución: solo confirma que la ruta está conectada mientras se implementa.
+
+## Estructura de carpetas
 
 ```text
-Navegador solicita /                 → Express entrega public/index.html
-index.html solicita /styles.css      → Express entrega public/styles.css
-index.html solicita /app.js          → Express entrega public/app.js
-public/app.js ejecuta fetch("/books") → Express dirige la petición a la API
+practice1-<topic>/
+  package.json                 # dependencias y comandos npm
+  README.md                    # contrato de la API e instrucciones del proyecto
+  src/                         # código que se ejecuta en Node.js
+    app.js                     # configuración de Express y unión de sus piezas
+    server.js                  # arranque del servidor en un puerto
+    middleware/logger.js       # comportamiento común a todas las peticiones
+    routes/resources.js        # método + URL → función del controlador
+    controllers/resourceController.js
+                               # coordina HTTP, validación y almacenamiento
+    validators/resourceValidator.js
+                               # reglas de los campos del recurso
+    data/store.js              # único módulo que conoce el array en memoria
+  public/                      # ficheros que descarga y ejecuta el navegador
+    index.html
+    styles.css
+    app.js
+  AI/                          # documentación del tester agent
 ```
 
-La carpeta `public/` contiene los ficheros que debe descargar y ejecutar el navegador:
+`src/` y `public/` tienen responsabilidades distintas. El navegador nunca debe acceder al array de `data/store.js`; solicita cambios y lecturas a la API mediante HTTP.
 
-```text
-public/
-  index.html   → estructura y formularios de la interfaz
-  styles.css   → presentación y diseño responsive
-  app.js       → eventos, renderizado y llamadas fetch a la API
-```
+## Cómo se conectan interfaz y servidor
 
-No contiene controladores, validadores ni datos: esos ficheros se ejecutan en Node.js y permanecen dentro de `src/`. `public/` tampoco se abre haciendo doble clic en `index.html`: se sirve mediante Express al ejecutar `npm start`.
-
-La conexión se activa en `src/app.js` mediante este middleware:
+Al ejecutar `npm start`, `src/server.js` inicia Express. En `src/app.js` se registra:
 
 ```js
 app.use(express.static(path.join(__dirname, "../public")));
 ```
 
-Debe registrarse antes del `404` general. Si llega `GET /`, Express encuentra `public/index.html`; si llega `GET /styles.css`, entrega el CSS. Para una URL de API, por ejemplo `GET /books`, no hay un fichero llamado `books`, así que la petición continúa hasta el *router* de `/books`.
-
-### Por qué `fetch("/books")` no escribe `localhost:3000`
-
-La barra inicial indica una URL relativa al mismo origen que ha servido la página. Si la página se abrió en `http://localhost:3000`, estas dos expresiones apuntan al mismo recurso:
-
-```js
-fetch("/books");
-fetch("http://localhost:3000/books");
-```
-
-La primera es preferible: el puerto no queda repetido en el cliente y no aparece un problema de CORS. En P1 no se levantan dos servidores; Express sirve a la vez la interfaz estática y la API.
-
-### Recorrido completo de un clic
-
-Cuando se implemente la creación desde el formulario, el recorrido será:
+Ese middleware permite que un único servidor responda tanto a la interfaz como a la API:
 
 ```text
-Persona completa el formulario
-        ↓
-public/app.js escucha submit y construye el body JSON
-        ↓  fetch("/books", { method: "POST", ... })
-src/routes/books.js asocia POST / con createBook
-        ↓
-src/controllers/booksController.js solicita la validación
-        ↓
-src/validators/bookValidator.js acepta o informa errores
-        ↓
-src/data/store.js guarda el recurso en memoria
-        ↓
-La API responde JSON con 201 o 400
-        ↓
-public/app.js comprueba response.ok y actualiza la interfaz
+GET /             → public/index.html
+GET /styles.css   → public/styles.css
+GET /app.js       → public/app.js
+GET /health       → ruta técnica que confirma la conexión
+GET /resources    → router de la API, pendiente de implementar
 ```
 
-El navegador no debe modificar el array de datos ni decidir si una petición es válida: puede ofrecer una validación inicial para mejorar la experiencia, pero el servidor vuelve a validar siempre.
+Como la página y la API comparten `http://localhost:3000`, el cliente utiliza URLs relativas. Por ejemplo, `fetch("/health")` significa «solicitar `/health` al mismo servidor que entregó esta página». No se levanta un segundo servidor ni se configura CORS para P1.
 
-En este *scaffolding*, la creación de un libro es el ejemplo vertical funcional: el manejador de `submit` usa `event.preventDefault()` para evitar el envío HTML convencional, construye el JSON, solicita `POST /books` y vuelve a ejecutar `loadBooks()` tras recibir `201`. Por ello el nuevo elemento aparece inmediatamente sin recargar la página ni cambiar la URL.
+## Pasos de trabajo
 
-## Qué está preparado y qué falta
+1. Elegir un único recurso de dominio y documentar sus campos en el `README.md` del proyecto.
+2. Renombrar de forma coherente `resources`, `resourceController` y `resourceValidator`.
+3. Definir las reglas de validación: obligatoriedad, tipo, rango y valores cerrados.
+4. Implementar primero el almacenamiento en memoria y después cada operación de la API.
+5. Probar cada *endpoint* directamente con `curl`, Postman o un cliente HTTP antes de conectarlo a la interfaz.
+6. Añadir en `public/app.js` las llamadas `fetch`, comprobando siempre `response.ok`.
+7. Implementar los estados de carga, error y lista vacía, sin recargar la página.
+8. Documentar el contrato final y utilizarlo como entrada del *tester agent*.
 
-| Elemento | Estado en este repositorio |
-|---|---|
-| Servidor Express, JSON, ficheros estáticos y gestión base de errores | Preparado |
-| Separación entre rutas, controlador, almacenamiento y validación | Preparada |
-| `GET /books`, `POST /books` y cliente que crea y lista la colección | Preparado como ejemplo vertical mínimo |
-| Operaciones restantes de CRUD, `PATCH`, búsqueda, filtros, ordenación, paginación y estadísticas | Pendiente |
-| Validación real y respuestas `400` con todas las incidencias | Pendiente |
-| Formularios, edición, eliminación y estados completos del cliente | Pendiente |
-| Documentación final de la API y componente de IA | Pendiente |
-
-## Primeros pasos recomendados
-
-1. Elegir un único recurso de dominio y definir al menos cinco campos antes de programar. Deben incluir texto obligatorio, número, booleano y valor de conjunto cerrado. El `id` lo genera el servidor.
-2. Renombrar de forma coherente `books`, `book` y los campos de ejemplo en rutas, controlador, validador, cliente y README.
-3. Escribir en el README del proyecto la forma del recurso, las reglas de validación y la tabla de *endpoints*.
-4. Implementar una operación cada vez y comprobarla con `curl` o con un cliente HTTP antes de conectarla a la interfaz.
-5. Integrar el cliente progresivamente: listado, creación, mensajes de validación, edición, eliminación, búsqueda y filtros.
-
-## Cómo crear esta estructura desde cero
-
-1. Crear el proyecto con `npm init -y` e instalar Express con `npm install express`.
-2. Crear `src/` para el código del servidor y `public/` para la interfaz de navegador.
-3. En `src/app.js`, crear la aplicación, registrar `express.json()` y `express.static(...)`.
-4. Crear `src/server.js` para ejecutar `app.listen(...)`. `app.js` solo configura y exporta la aplicación.
-5. Servir una página inicial desde `public/index.html` y comprobar `http://localhost:3000` antes de escribir `fetch`.
-6. Añadir una primera ruta de API, probarla directamente y, por último, llamarla desde `public/app.js` con una URL relativa.
-
-## Recorrido de una petición
+## Orden de una petición
 
 ```text
-Navegador → routes/books.js → controllers/booksController.js
-          → validators/bookValidator.js → data/store.js
-          → respuesta JSON → navegador
+public/app.js
+    ↓ fetch("/<resource>")
+routes/<resource>.js
+    ↓
+controllers/<resource>Controller.js
+    ↓ validación y almacenamiento
+validators/<resource>Validator.js + data/store.js
+    ↓
+respuesta JSON
+    ↓
+public/app.js actualiza la interfaz
 ```
 
-- **Ruta:** asocia método HTTP y URL con una función. No contiene lógica de negocio.
-- **Controlador:** coordina la petición, decide el `status code` y no conoce cómo se guardan los datos.
-- **Validador:** aplica las reglas del recurso y devuelve todas las incidencias detectadas.
-- **Almacenamiento:** encapsula el array en memoria; podrá sustituirse sin cambiar las rutas.
-- **Cliente:** construye la URL de consulta, usa `fetch` y comprueba `response.ok` antes de utilizar la respuesta.
+Las rutas no contienen lógica de negocio; el controlador no modifica directamente el array; el validador no responde HTTP; y el cliente no decide si los datos son válidos. Esta separación permite localizar responsabilidades y sustituir después el almacenamiento sin reescribir la API.
 
-## Orden de implementación sugerido
+## Comprobación inicial
 
-| Hito | Objetivo comprobable |
-|---|---|
-| 1. Contrato | Recurso, campos, reglas y tabla de rutas escritos en el README |
-| 2. Lectura | `GET /<resource>` y `GET /<resource>/:id`, incluido el `404` |
-| 3. Escritura | `POST`, `PUT`, `PATCH` y `DELETE`, con los códigos correctos |
-| 4. Validación | `400` con todas las incidencias; `POST`/`PUT` completos y `PATCH` parcial |
-| 5. Consulta y agregado | búsqueda, filtros, ordenación, paginación y `GET /<resource>/stats` |
-| 6. Cliente | listado, creación, edición, eliminación, filtros y estados de interfaz |
-| 7. Revisión | README completo, comprobaciones del *tester agent* y registro de revisión |
-
-## Comprobaciones iniciales
-
-Con el servidor en marcha, estas peticiones deben ser el primer punto de control:
+Antes de implementar el recurso, deben funcionar estas dos comprobaciones:
 
 ```bash
 curl http://localhost:3000/health
-curl http://localhost:3000/books
-curl -i http://localhost:3000/books/999
+curl -i http://localhost:3000/resources
 ```
 
-La tercera petición debe acabar respondiendo `404` cuando se implemente la operación correspondiente. Los `TODO` indican deliberadamente las decisiones y el código que debe elaborar cada proyecto.
-
-## Componente de IA
-
-La carpeta `AI/` contiene las plantillas mínimas requeridas para documentar un único *tester agent*. El agente recibe el contrato público y la API ejecutándose, no los ficheros de implementación. Sus resultados se revisan antes de integrarlos.
-
+La primera responde `200`; la segunda responde `501` hasta que se implemente la colección. Es el punto de partida deliberado del esqueleto.
