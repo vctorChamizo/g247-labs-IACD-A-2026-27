@@ -1,0 +1,61 @@
+name: Semana 07 - Windows y PostgreSQL
+
+# Se ejecutará cuando se publique el ejemplo. Crear este archivo localmente no
+# ejecuta ninguna tarea remota ni verifica por sí solo la instalación de Windows.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "semana-07/**"
+      - ".github/workflows/semana-07-windows.yml"
+  pull_request:
+    paths:
+      - "semana-07/**"
+      - ".github/workflows/semana-07-windows.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-2025
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: semana-07
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: 5432
+      PGUSER: postgres
+      # Credencial pública del PostgreSQL desechable de la imagen de GitHub.
+      # No es una contraseña del repositorio ni de una máquina personal.
+      PGPASSWORD: root
+      PGDATABASE: g247_ci
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: semana-07/package-lock.json
+      - name: Levantar PostgreSQL 17 preinstalado en el runner
+        run: |
+          $service = Get-Service -Name postgresql-x64-17 -ErrorAction Stop
+          Set-Service -Name $service.Name -StartupType Manual
+          Start-Service -Name $service.Name
+          $service.WaitForStatus('Running', [TimeSpan]::FromSeconds(30))
+          & "$env:PGBIN\pg_isready.exe" -h $env:PGHOST -p $env:PGPORT -U $env:PGUSER
+          if ($LASTEXITCODE -ne 0) { throw "PostgreSQL no está preparado" }
+      - run: npm.cmd ci
+      - run: npm.cmd run db:create
+      - run: npm.cmd run db:migrate
+      - run: npm.cmd run db:seed
+      - run: npm.cmd run db:check
+      - run: npm.cmd run demo:model
+      - run: npm.cmd run demo:errors
+      - run: npm.cmd test

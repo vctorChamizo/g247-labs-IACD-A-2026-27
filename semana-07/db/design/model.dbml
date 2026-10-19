@@ -1,0 +1,16 @@
+// Pegar en dbdiagram.io para dibujar el estado inicial (migraciones 001 y 002).
+// La migración 003 añade priority como evolución posterior del modelo.
+Table users {
+  id integer [pk, increment]
+  email text [not null, unique]
+}
+
+Table tasks {
+  id integer [pk, increment]
+  user_id integer [not null]
+  title text [not null, note: 'CHECK: length(trim(title)) > 0']
+  done boolean [not null, default: false]
+  internal_note text [not null, default: '']
+}
+
+Ref: tasks.user_id > users.id [delete: restrict]

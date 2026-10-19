@@ -1,0 +1,25 @@
+{
+  "name": "aula-web-tasks-postgresql",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:create": "node scripts/createDatabase.js",
+    "db:check": "node scripts/checkDatabase.js",
+    "db:migrate": "node scripts/migrate.js",
+    "db:step": "node scripts/migrate.js --step",
+    "db:status": "node scripts/migrate.js --status",
+    "db:seed": "node scripts/migrate.js --seed",
+    "demo:model": "node scripts/demoModel.js",
+    "demo:errors": "node scripts/demoErrors.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "pg": "^8.16.3"
+  }
+}
