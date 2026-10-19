@@ -49,10 +49,12 @@ También se revisaron sintaxis JavaScript, enlaces Markdown locales, exclusión 
 La auditoría de dependencias del ejemplo no detectó vulnerabilidades conocidas
 en esta fecha; este resultado es una fotografía, no una garantía futura.
 
-## Windows: contraste y ejecución automática preparada
+## Windows: ejecución automática completada
 
-No hay una máquina Windows ni un hipervisor Windows disponible en este entorno.
-El asistente EDB y los servicios de Windows no se han ejecutado en el Mac.
+La ejecución real en Windows se realizó en un runner Windows Server 2025 de
+GitHub Actions, con PostgreSQL 17 y Node 22/24. No se necesita una máquina
+Windows local para reproducir esa validación automática. El asistente gráfico
+EDB no forma parte de estas pruebas.
 
 Se contrastaron los pasos con:
 
@@ -60,17 +62,20 @@ Se contrastaron los pasos con:
 - [Descargas PostgreSQL para Windows](https://www.postgresql.org/download/windows/).
 - [Imagen Windows Server 2025 de GitHub](https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-Readme.md).
 
-Se prepara `.github/workflows/semana-07-windows.yml`: utiliza PowerShell,
+El workflow `.github/workflows/semana-07-windows.yml` utiliza PowerShell,
 PostgreSQL 17 del runner y Node 22/24; instala con `npm.cmd ci` y ejecuta la
 secuencia de preparación y los tests. El servicio y las credenciales desechables
 proceden de la documentación de esa imagen, no de una configuración personal.
 
-**Estado: preparado localmente, no publicado ni ejecutado en GitHub.** Para
-obtener evidencia Windows real debe publicarse con autorización y revisarse el
-resultado de ambos jobs. Aun pasando esos jobs, el asistente gráfico y los
-permisos particulares de un portátil Windows siguen siendo una comprobación
-manual distinta. El workflow no instala el asistente EDB: usa el motor ya
-instalado en la imagen del runner.
+**Resultado: ambos jobs aprobados**, Node 22 y Node 24, sobre el commit
+`18d427569fc83913c15513b7d4ac96b01c35a6a3`. Pasaron la instalación con `npm ci`,
+creación de DB, migraciones, seed, diagnóstico, demostraciones y las 12 pruebas.
+La [ejecución de referencia](https://github.com/vctorChamizo/g247-labs-IACD-A-2026-27/actions/runs/39243258454)
+conserva los logs de ambos jobs.
+
+El asistente gráfico y los permisos particulares de un portátil Windows siguen
+siendo una comprobación manual distinta. El workflow usa el motor ya instalado
+en la imagen del runner; no prueba el instalador EDB ni su interfaz.
 
 ## Otras comprobaciones pendientes
 
