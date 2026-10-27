@@ -1,0 +1,58 @@
+name: Semana 08 - Windows y PostgreSQL
+
+# Preparado para ejecutarse al publicar; su presencia local no acredita Windows.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "semana-08/**"
+      - ".github/workflows/semana-08-windows.yml"
+  pull_request:
+    paths:
+      - "semana-08/**"
+      - ".github/workflows/semana-08-windows.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-2025
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: semana-08
+    env:
+      # Credenciales ficticias del servicio desechable del runner; no son secretos.
+      DATABASE_URL: postgresql://postgres:root@127.0.0.1:5432/g247_w8_ci
+      JWT_SECRET: ci-only-disposable-week8-secret-1234567890
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: semana-08/package-lock.json
+      - name: Levantar PostgreSQL 17 preinstalado en el runner
+        run: |
+          $service = Get-Service -Name postgresql-x64-17 -ErrorAction Stop
+          Set-Service -Name $service.Name -StartupType Manual
+          Start-Service -Name $service.Name
+          $service.WaitForStatus('Running', [TimeSpan]::FromSeconds(30))
+          & "$env:PGBIN\pg_isready.exe" -h 127.0.0.1 -p 5432 -U postgres
+          if ($LASTEXITCODE -ne 0) { throw "PostgreSQL no está preparado" }
+      - run: npm.cmd ci
+      - run: npm.cmd run db:create
+      - run: npm.cmd run db:migrate
+      - run: npm.cmd run db:seed
+      - run: npm.cmd run db:check
+      - run: npm.cmd run demo:jwt
+      - run: npm.cmd run demo:hash
+      - run: npm.cmd run demo:validation
+      - run: npm.cmd run demo:security
+      - run: npm.cmd test

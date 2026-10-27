@@ -11,6 +11,7 @@ Ejemplos progresivos empleados en las clases de Programación de Aplicaciones We
 | 5 | Node.js, Express, rutas y middleware | [`semana-05/`](semana-05/) |
 | 6 | Controladores, manejo de errores y API REST CRUD | [`semana-06/`](semana-06/) |
 | 7 | Diseño relacional, PostgreSQL, migraciones y capa de modelos | [`semana-07/`](semana-07/) |
+| 8 | JWT, autorización, contraseñas, CORS, validación y paginación | [`semana-08/`](semana-08/) |
 
 ## Prácticas
 

@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Demostración CORS</title></head>
+<body>
+  <h1>Una misma página, dos orígenes</h1>
+  <p id="origin"></p>
+  <p>La API debe estar en marcha en http://localhost:3000. El token permanece solo en memoria y se pierde al recargar.</p>
+  <label>Token de Ana (sin prefijo Bearer): <input id="token" type="password" autocomplete="off"></label>
+  <p><button id="health">Consultar /health</button> <button id="tasks">Consultar /tasks con Bearer</button></p>
+  <pre id="result" aria-live="polite">Todavía no se ha realizado una petición.</pre>
+  <p>Revisar Network y Console. 5173 está permitido; 5174 no está en la lista CORS.</p>
+  <script src="/client.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Variables de entorno locales: conservar solo plantillas sin secretos.
+.env
+.env.*
+!.env.template
+!.env.example
+!.env.sample

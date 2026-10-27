@@ -1,0 +1,887 @@
+{
+  "info": {
+    "name": "Semana 08 - Autenticación y seguridad",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Ejecutar los bloques en orden sobre la DB de demostración. Contraseñas ficticias del seed; no importar credenciales reales."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "anaToken",
+      "value": ""
+    },
+    {
+      "key": "luisToken",
+      "value": ""
+    },
+    {
+      "key": "anaTaskId",
+      "value": ""
+    },
+    {
+      "key": "luisTaskId",
+      "value": ""
+    },
+    {
+      "key": "createdTaskId",
+      "value": ""
+    },
+    {
+      "key": "registerEmail",
+      "value": ""
+    },
+    {
+      "key": "tamperedToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Identidad y autenticación (diapositivas 2-9)",
+      "item": [
+        {
+          "name": "API viva",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Base preparada",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health/db",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sin token",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks",
+            "header": []
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Ana",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana@example.com\",\n  \"password\": \"AulaSegura8!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"anaToken\", pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Luis",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"luis@example.com\",\n  \"password\": \"AulaSegura8!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"luisToken\", pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Token manipulado",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tamperedToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const parts = pm.collectionVariables.get(\"anaToken\").split(\".\");",
+                  "parts[2] = (parts[2][0] === \"a\" ? \"b\" : \"a\") + parts[2].slice(1);",
+                  "pm.collectionVariables.set(\"tamperedToken\", parts.join(\".\"));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 - Propiedad y CRUD (diapositiva 10)",
+      "item": [
+        {
+          "name": "Tareas de Ana",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"anaTaskId\", String(pm.response.json().items[0].id));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tareas de Luis",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{luisToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"luisTaskId\", String(pm.response.json().items[0].id));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ana consulta su tarea",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/{{anaTaskId}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ana intenta leer una tarea de Luis",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/{{luisTaskId}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 403\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tarea inexistente",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/2147483647",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Propietario inyectado en el body",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Suplantación\",\n  \"done\": false,\n  \"userId\": 2147483647\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear como Ana",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tarea de prueba de clase\",\n  \"done\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set(\"createdTaskId\", String(pm.response.json().id));",
+                  "pm.test(\"No expone seed_key\", () => { if (\"seed_key\" in pm.response.json()) throw new Error(\"Campo interno expuesto\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reemplazar tarea creada",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/tasks/{{createdTaskId}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tarea reemplazada\",\n  \"done\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Completar tarea creada",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/tasks/{{createdTaskId}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"done\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar tarea creada",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/tasks/{{createdTaskId}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "La tarea ya no existe",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/{{createdTaskId}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 - CORS: inspección de cabeceras (diapositivas 11-12)",
+      "item": [
+        {
+          "name": "Preflight público con Authorization",
+          "request": {
+            "method": "OPTIONS",
+            "url": "{{baseUrl}}/tasks",
+            "header": [
+              {
+                "key": "Origin",
+                "value": "http://localhost:5173"
+              },
+              {
+                "key": "Access-Control-Request-Method",
+                "value": "GET"
+              },
+              {
+                "key": "Access-Control-Request-Headers",
+                "value": "authorization"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 204\", () => pm.response.to.have.status(204));",
+                  "pm.test(\"Origen permitido\", () => { if (pm.response.headers.get(\"access-control-allow-origin\") !== \"http://localhost:5173\") throw new Error(\"Falta CORS\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Origen ajeno: Postman NO aplica el bloqueo del navegador",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health",
+            "header": [
+              {
+                "key": "Origin",
+                "value": "http://localhost:5174"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Sin permiso de lectura CORS\", () => { if (pm.response.headers.get(\"access-control-allow-origin\")) throw new Error(\"Origen no debería estar autorizado\"); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 - Registro, login y Zod (diapositivas 13-21)",
+      "item": [
+        {
+          "name": "Registrar usuario ficticio",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{registerEmail}}\",\n  \"password\": \"RegistroSeguro8!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"registerEmail\", \"registro.\" + Date.now() + \"@example.com\");"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Solo id/email\", () => { if (Object.keys(pm.response.json()).sort().join(\",\") !== \"email,id\") throw new Error(\"Contrato incorrecto\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registro duplicado",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{registerEmail}}\",\n  \"password\": \"RegistroSeguro8!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login incorrecto",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana@example.com\",\n  \"password\": \"ClaveIncorrecta8!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Título vacío tras trim",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"   \"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Booleano enviado como texto",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tarea\",\n  \"done\": \"false\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 - Paginación (diapositivas 22-23)",
+      "item": [
+        {
+          "name": "Página 1, dos tareas",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks?page=1&limit=2",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Página 2, dos tareas",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks?page=2&limit=2",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Límites seguros",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks?page=0&limit=999",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"page=1 y limit=100\", () => { const r=pm.response.json(); if(r.page!==1 || r.limit!==100) throw new Error(\"Normalización incorrecta\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Fracción: usar default, no truncar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks?page=2.7&limit=2",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{anaToken}}"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Fracción usa página por defecto\", () => { if(pm.response.json().page!==1) throw new Error(\"No debería truncar\"); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "aula-web-auth-semana-08",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:create": "node scripts/createDatabase.js",
+    "db:migrate": "node scripts/database.js migrate",
+    "db:status": "node scripts/database.js status",
+    "db:seed": "node scripts/database.js seed",
+    "db:check": "node scripts/database.js check",
+    "demo:jwt": "node demos/01-jwt.js",
+    "demo:hash": "node demos/02-hash.js",
+    "demo:validation": "node demos/03-validation.js",
+    "demo:security": "node demos/04-security.js",
+    "demo:cors": "node demos/cors/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3",
+    "zod": "^4.6.7"
+  }
+}
